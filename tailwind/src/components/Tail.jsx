@@ -30,7 +30,7 @@ if(!user && !password)
   setError("Username and Password are required")
   return;
 }
-  if(user=="admin@gmail.com" && password=="admin")
+  if(user=="admin" && password=="admin")
   {
     setError("");
     navigate('./home')

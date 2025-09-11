@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'
 export default function Home() {
   const navigate = useNavigate()
 
-  const [number, setNumber] = useState("")
   const [fromDate, setFromDate] = useState("")
   const [toDate, setToDate] = useState("")
 
@@ -15,7 +14,22 @@ export default function Home() {
   }
 
   const handleCalculate = () => {
-    alert(`Number: ${number}\nFrom: ${fromDate}\nTo: ${toDate}`)
+    if (!fromDate || !toDate) {
+      alert("Please fill both date fields")
+      return
+    }
+
+    const fromDay = parseInt(fromDate.split('-')[2])
+    const toDay = parseInt(toDate.split('-')[2])
+    const dayDiff = toDay - fromDay + 1
+
+    navigate('/calender', {
+      state: {
+        columns: dayDiff,
+        fromDate,
+        toDate
+      }
+    })
   }
 
   return (
@@ -31,20 +45,6 @@ export default function Home() {
       </motion.h2>
 
       
-      <motion.input
-        type="number"
-        value={number}
-          onChange={(e) => {
-    const val = e.target.value;
-    if (val <= 40) setNumber(val); 
-  }}
-        placeholder="Enter a number(Max-40)"
-        className="p-3 w-full max-w-md rounded-2xl border border-gray-400 text-center focus:outline-none text-xl"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6 }}
-      />
-
      
       <motion.input
         type="date"
