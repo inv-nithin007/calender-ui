@@ -1,78 +1,138 @@
 import './Tail.css'
-import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import Selecto from 'react-selecto'
+import { motion } from 'framer-motion';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
-export default function Calendar() {
-  const location = useLocation()
-  const { columns, fromDate, toDate } = location.state || { 
-    columns: 5, fromDate: '', toDate: '' 
-  }
+const GridBoxes = () => {
+
+  const { fromDate, toDate, numberValue } = useSelector((state) => state.date);
+  const [selected, setSelected] = useState([]);
+  const [error,setError]=useState('');
+
+  const diff = Math.ceil((new Date(toDate) - new Date(fromDate)) / (1000 * 60 * 60 * 24)) + 1;
   
-  const rows = 24
-  const [selected, setSelected] = useState([])
-  const totalBoxes = rows * columns
 
+  const dateRange = Array.from({ length: diff }, (_, i) => {
+    const currentDate = new Date(fromDate);
+    currentDate.setDate(currentDate.getDate() + i);
+    return currentDate.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric' 
+    }).replace(' ', '-');
+  });
+  
+  const boxes = Array.from({ length: 28*diff }, (_, i) => ({
+    id: i + 1,
+  }));
 
   return (
-    <div className="p-6">
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold">Select Time Slots</h2>
-        <p className="text-sm text-gray-600">
-          From: {fromDate} | To: {toDate} | Grid: 24 rows × {columns} columns
-        </p>
+    <div className="h-screen w-screen bg-gray-100 p-2 flex flex-col gap-2">
+      
+  
+      <div className="flex ">
+        <div className="min-w-10"></div>
+        <div 
+          className="grid gap-1.5 flex-1"
+          style={{
+            gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`
+          }}
+        >
+          {dateRange.map((date, i) => (
+            <div key={i} className="text-center text-sm font-semibold text-gray-700 py-2">
+              {date}
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div 
-        className="calendar grid gap-2"
-        style={{
-          gridTemplateRows: `repeat(24, minmax(0, 1fr))`,
-          gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`
-        }}
-      >
-        {Array.from({ length: totalBoxes }, (_, i) => {
-          const isActive = selected.includes(i + 1)
+     
+      <div className="flex gap-2  flex-1">
+        
+        <div
+          className="grid "
+        >
+          {Array.from({ length: 30 }, (_, i) => {
+            if (i % 2 === 0) {
+              const timeLabel = Math.floor(i / 2) + 8;
+              if (timeLabel <= 22) {
+                return (
+                  <div
+                    key={i}
+                    className="flex items-center  justify-center text-sm font-semibold text-gray-700 min-w-8"
+                  >
+                    {timeLabel}
+                  </div>
+                );
+              }
+            }
+            return <div key={i} />;
+          })}
+        </div>
+
+        
+        <div
+          className="grid gap-2 flex-1"
+          style={{
+           
+            gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`,
+          }}
+        >
+        {boxes.map((box) => {
+          const isSelected = selected.includes(box.id);
           return (
-            <div
-              key={i}
-              data-key={i + 1}
-              className={`day-cell border rounded-md p-4 text-center cursor-pointer transition 
-              ${isActive ? "bg-blue-400 text-white" : "hover:bg-gray-200"}`}
-              onClick={() => {
-                setSelected(prev =>
-                  prev.includes(i + 1)
-                    ? prev.filter(d => d !== i + 1)
-                    : [...prev, i + 1]
-                )
+            <motion.div
+              key={box.id}
+              className={` rounded-lg shadow-lg border-2 cursor-pointer p-1 ${
+                isSelected
+                  ? "bg-blue-400 border-blue-400"
+                  : "bg-white border-gray-300 hover:bg-blue-200"
+              }`}
+              whileHover={{
+                scale: 1.02,
+                transition: { duration: 0.2 },
+              }}
+              whileTap={{ scale: 0.97 }}
+              onTap={() => {
+                setError(''); 
+                
+              
+                if (!selected.includes(box.id)) {
+                  const maxSelections = numberValue * 10;
+                  if (selected.length >= maxSelections) {
+                    setError(`Maximum ${maxSelections} selections allowed `);
+                    setTimeout(() => setError(""), 3000);
+                    return;
+                  }
+                }
+                
+                setSelected((prev) =>
+                  prev.includes(box.id)
+                    ? prev.filter((id) => id !== box.id)
+                    : [...prev, box.id]
+                );
               }}
             />
-          )
+          );
         })}
-      </div>
-
-      <Selecto
-        selectableTargets={[".day-cell"]}
-        selectByClick={false}
-        hitRate={0}
-        onSelect={e => {
-          const keys = e.selected.map(el => parseInt(el.dataset.key))
-          setSelected(keys)
-        }}
-      />
-
-      <div className="mt-4 flex items-center justify-between">
-        <div className="font-semibold">
-          Selected: {selected.length} boxes
         </div>
-        {selected.length > 0 && (
-          <button
-            onClick={() => setSelected([])}
-            className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-lg transition"
-          >
-            Deselect All
-          </button>
-        )}
       </div>
+      
+
+      {error && (
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+          <motion.div
+            key={error}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="bg-red-500 text-white p-3 rounded-lg shadow-lg font-semibold text-center"
+          >
+            {error}
+          </motion.div>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
+
+export default GridBoxes;

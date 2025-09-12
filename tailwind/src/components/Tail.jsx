@@ -15,6 +15,10 @@ const [error,setError]=useState("")
 const navigate=useNavigate();
 
 const handlelogin=()=>{
+  if(!user && !password){
+    setError("Enter Username and Password")
+    return
+  }
 if(!user){
   setError("Username is required");
   return
