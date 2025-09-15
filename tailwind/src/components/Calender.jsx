@@ -26,19 +26,19 @@ const GridBoxes = () => {
   }));
 
   return (
-    <div className="h-screen w-screen bg-gray-100 p-2 flex flex-col gap-2">
+    <div className="h-screen w-screen p-2 flex flex-col gap-2">
       
   
-      <div className="flex ">
-        <div className="min-w-10"></div>
+      <div className="flex">
+        <div className="min-w-10 "></div>
         <div 
-          className="grid gap-1.5 flex-1"
+          className="grid gap-1 flex-1"
           style={{
             gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`
           }}
         >
           {dateRange.map((date, i) => (
-            <div key={i} className="text-center text-sm font-semibold text-gray-700 py-2">
+            <div key={i} className="text-center text-sm font-semibold text-gray-700 p-2">
               {date}
             </div>
           ))}
@@ -46,7 +46,7 @@ const GridBoxes = () => {
       </div>
 
      
-      <div className="flex gap-2  flex-1">
+      <div className="flex  gap-2  flex-1">
         
         <div
           className="grid "
@@ -58,7 +58,7 @@ const GridBoxes = () => {
                 return (
                   <div
                     key={i}
-                    className="flex items-center  justify-center text-sm font-semibold text-gray-700 min-w-8"
+                    className="items-center  justify-center text-sm font-semibold text-gray-700 min-w-8"
                   >
                     {timeLabel}
                   </div>
@@ -119,13 +119,15 @@ const GridBoxes = () => {
       
 
       {error && (
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+         <div className="fixed bottom-10 left-0 right-0 text-center">
+
+
           <motion.div
             key={error}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="bg-red-500 text-white p-3 rounded-lg shadow-lg font-semibold text-center"
+            transition={{ duration: 0.3 }}
+            className="max-w-100 mx-auto bg-red-500 text-white p-3 rounded-lg shadow-lg font-semibold text-center"
           >
             {error}
           </motion.div>
