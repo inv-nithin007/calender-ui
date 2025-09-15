@@ -94,6 +94,7 @@ const GridBoxes = () => {
               }`}
            
               onClick={(e) => {
+                console.log('Click detected, isDragging:', isDragging);
                 if (!isDragging) {
                   setError(''); 
                   
@@ -110,9 +111,11 @@ const GridBoxes = () => {
                     const newSelection = prev.includes(box.id)
                       ? prev.filter((id) => id !== box.id)
                       : [...prev, box.id];
-                    
+                    console.log('Click processed, new selection:', newSelection);
                     return newSelection;
                   });
+                } else {
+                  console.log('Click blocked by isDragging');
                 }
               }}
             />
@@ -123,31 +126,32 @@ const GridBoxes = () => {
       
       <Selecto
         selectableTargets={[".selectable"]}
-        selectByClick={true}
+        selectByClick={false}
         selectFromInside={true}
         
         hitRate={5}
         onDragStart={() => {
-          setIsDragging(true);
+          console.log('Drag started');
+          // Don't set isDragging immediately, wait for actual selection
           setError('');
         }}
         onSelect={(e) => {
-
-
+          console.log('Drag selection happening');
+          setIsDragging(true); // Set isDragging only when actually selecting
+          
           const selectedIds = e.selected.map(el => parseInt(el.dataset.id));
           
-          
-        
           setSelected(prev => {
             const combined = [...new Set([...prev, ...selectedIds])];
             return combined;
           });
         }}
         onSelectEnd={(e) => {
-
-
-          
-          setTimeout(() => setIsDragging(false), 200);
+          console.log('Drag ended');
+          setTimeout(() => {
+            console.log('isDragging set to false');
+            setIsDragging(false);
+          }, 50);
           
   
           const maxSelections = numberValue * 10;
