@@ -34,7 +34,7 @@ const GridBoxes = () => {
       <div className="flex">
         <div className="min-w-10 "></div>
         <div 
-          className="grid gap-1 flex-1"
+          className="grid gap-0 flex-1"
           style={{
             gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`
           }}
@@ -48,7 +48,7 @@ const GridBoxes = () => {
       </div>
 
      
-      <div className="flex  gap-2  flex-1 min-h-0">
+      <div className="flex  gap-2  flex-1 ">
         
         <div
           className="grid "
@@ -94,7 +94,7 @@ const GridBoxes = () => {
               }`}
            
               onClick={(e) => {
-                console.log('Click detected, isDragging:', isDragging);
+                
                 if (!isDragging) {
                   setError(''); 
                   
@@ -111,12 +111,10 @@ const GridBoxes = () => {
                     const newSelection = prev.includes(box.id)
                       ? prev.filter((id) => id !== box.id)
                       : [...prev, box.id];
-                    console.log('Click processed, new selection:', newSelection);
+                  
                     return newSelection;
                   });
-                } else {
-                  console.log('Click blocked by isDragging');
-                }
+                } 
               }}
             />
           );
@@ -126,18 +124,17 @@ const GridBoxes = () => {
       
       <Selecto
         selectableTargets={[".selectable"]}
-        selectByClick={false}
+      
         selectFromInside={true}
         
         hitRate={5}
         onDragStart={() => {
-          console.log('Drag started');
-          // Don't set isDragging immediately, wait for actual selection
+
           setError('');
         }}
         onSelect={(e) => {
-          console.log('Drag selection happening');
-          setIsDragging(true); // Set isDragging only when actually selecting
+          
+          setIsDragging(true); 
           
           const selectedIds = e.selected.map(el => parseInt(el.dataset.id));
           
@@ -147,9 +144,9 @@ const GridBoxes = () => {
           });
         }}
         onSelectEnd={(e) => {
-          console.log('Drag ended');
+          
           setTimeout(() => {
-            console.log('isDragging set to false');
+            
             setIsDragging(false);
           }, 50);
           
