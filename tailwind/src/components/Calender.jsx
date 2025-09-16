@@ -35,7 +35,7 @@ const GridBoxes = () => {
       <div className="flex">
         <div className="min-w-10 "></div>
         <div 
-          className="grid gap-0 flex-1"
+          className="grid gap-2 flex-1"
           style={{
             gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`
           }}
@@ -135,19 +135,19 @@ const GridBoxes = () => {
       
       <Selecto
         selectableTargets={[".selectable"]}
-        dragContainer={isConfirmed ? null : document.body}
+       
         selectFromInside={true}
-
+        
+        preventDragFromInside={false}
         hitRate={5}
         onDragStart={() => {
           if (!isConfirmed) {
+            setIsDragging(true);
             setError('');
           }
         }}
         onSelect={(e) => {
           if (!isConfirmed) {
-            setIsDragging(true);
-
             const selectedIds = e.selected.map(el => parseInt(el.dataset.id));
 
             setSelected(prev => {
@@ -158,11 +158,7 @@ const GridBoxes = () => {
         }}
         onSelectEnd={(e) => {
           if (!isConfirmed) {
-            setTimeout(() => {
-
-              setIsDragging(false);
-            }, 50);
-
+            setIsDragging(false);
 
             const maxSelections = numberValue * 10;
             setSelected(prev => {
