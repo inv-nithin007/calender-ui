@@ -39,11 +39,17 @@ const GridBoxes = () => {
             gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`
           }}
         >
-          {dateRange.map((date, i) => (
-            <div key={i} className="text-center text-sm font-semibold text-gray-700 p-2">
-              {date}
-            </div>
-          ))}
+          {dateRange.map((date, i) => {
+            const currentDate = new Date(fromDate);
+            currentDate.setDate(currentDate.getDate() + i);
+            const dayOnly = currentDate.getDate();
+
+            return (
+              <div key={i} className="text-center text-sm font-semibold text-gray-700 p-2">
+                {(window.innerWidth < 490 && diff > 10) ? dayOnly : date}
+              </div>
+            );
+          })}
         </div>
       </div>
 
