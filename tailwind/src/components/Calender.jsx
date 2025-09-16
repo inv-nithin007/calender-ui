@@ -24,12 +24,31 @@ const GridBoxes = () => {
     }).replace(' ', '-');
   });
   
-  const boxes = Array.from({ length: 28*diff }, (_, i) => ({
+  const boxes = Array.from({ length: 30*diff }, (_, i) => ({
     id: i + 1,
   }));
 
+  const getTimeSlot = (cellId) => {
+    const timeIndex = Math.floor((cellId - 1) / diff);
+    const dayIndex = (cellId - 1) % diff;
+
+    const startHour = 8 + Math.floor(timeIndex / 2);
+    const startMinute = (timeIndex % 2) * 30;
+    const endHour = startMinute === 0 ? startHour : startHour + 1;
+    const endMinute = startMinute === 0 ? 30 : 0;
+
+    const timeStart = `${startHour}:${startMinute === 0 ? '00' : '30'}`;
+    const timeEnd = `${endHour}:${endMinute === 0 ? '00' : '30'}`;
+
+    const currentDate = new Date(fromDate);
+    currentDate.setDate(currentDate.getDate() + dayIndex);
+    const dateStr = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+    return `${dateStr} ${timeStart}-${timeEnd}`;
+  };
+
   return (
-    <div className="h-screen w-screen p-2 flex flex-col gap-2 overflow-hidden">
+    <div className="h-screen w-screen p-2 flex flex-col gap-2 overflow-auto">
       
   
       <div className="flex">
@@ -63,7 +82,7 @@ const GridBoxes = () => {
           {Array.from({ length: 30 }, (_, i) => {
             if (i % 2 === 0) {
               const timeLabel = Math.floor(i / 2) + 8;
-              if (timeLabel <= 22) {
+              if (timeLabel <= 23) {
                 return (
                   <div
                     key={i}
@@ -84,7 +103,7 @@ const GridBoxes = () => {
           style={{
            
             gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(28, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(30, minmax(0, 1fr))`,
             maxHeight: '100%'
           }}
         >
@@ -135,9 +154,9 @@ const GridBoxes = () => {
       
       <Selecto
         selectableTargets={[".selectable"]}
-       
+        selectByClick={false}
         selectFromInside={true}
-        
+
         preventDragFromInside={false}
         hitRate={5}
         onDragStart={() => {
@@ -219,6 +238,7 @@ const GridBoxes = () => {
         </div>
 
 
+
       {error && (
          <div className="fixed top-10 left-0 right-0 text-center">
 
@@ -240,7 +260,24 @@ const GridBoxes = () => {
 
         
       )}
+       <div>
+                {selected.length > 0 && (
+        <div className="mt-2 p-4 bg-gray-100 rounded-lg max-h-40 overflow-y-auto">
+          <h3 className="font-semibold mb-2">Selected Time Slots:</h3>
+          <div className="flex flex-wrap gap-2">
+            {selected.map(cellId => (
+              <div key={cellId} className="bg-gray-500 text-white px-3 py-1 rounded-xl shadow-xl text-sm">
+                {getTimeSlot(cellId)}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+        </div>
     </div>
+
+       
+
   );
 };
 
