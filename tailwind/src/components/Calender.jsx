@@ -10,6 +10,7 @@ const GridBoxes = () => {
   const [selected, setSelected] = useState([]);
   const [error,setError]=useState('');
   const [isDragging, setIsDragging] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const diff = Math.ceil((new Date(toDate) - new Date(fromDate)) / (1000 * 60 * 60 * 24)) + 1;
   
@@ -93,15 +94,19 @@ const GridBoxes = () => {
             <div
               key={box.id}
               data-id={box.id}
-              className={`selectable rounded-lg shadow-lg border-2 cursor-pointer p-1   ${
+              className={`selectable rounded-lg shadow-lg border-2 p-1 ${
+                isConfirmed
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+              } ${
                 isSelected
                   ? "bg-blue-400 border-blue-400"
                   : "bg-white border-gray-300 hover:bg-blue-200"
               }`}
-           
+
               onClick={(e) => {
-                
-                if (!isDragging) {
+
+                if (!isDragging && !isConfirmed) {
                   setError(''); 
                   
                   if (!selected.includes(box.id)) {
@@ -130,42 +135,45 @@ const GridBoxes = () => {
       
       <Selecto
         selectableTargets={[".selectable"]}
-      
+        dragContainer={isConfirmed ? null : document.body}
         selectFromInside={true}
-        
+
         hitRate={5}
         onDragStart={() => {
-
-          setError('');
+          if (!isConfirmed) {
+            setError('');
+          }
         }}
         onSelect={(e) => {
-          
-          setIsDragging(true); 
-          
-          const selectedIds = e.selected.map(el => parseInt(el.dataset.id));
-          
-          setSelected(prev => {
-            const combined = [...new Set([...prev, ...selectedIds])];
-            return combined;
-          });
+          if (!isConfirmed) {
+            setIsDragging(true);
+
+            const selectedIds = e.selected.map(el => parseInt(el.dataset.id));
+
+            setSelected(prev => {
+              const combined = [...new Set([...prev, ...selectedIds])];
+              return combined;
+            });
+          }
         }}
         onSelectEnd={(e) => {
-          
-          setTimeout(() => {
-            
-            setIsDragging(false);
-          }, 50);
-          
-  
-          const maxSelections = numberValue * 10;
-          setSelected(prev => {
-            if (prev.length > maxSelections) {
-              setError(`Maximum ${maxSelections} selections allowed`);
-              setTimeout(() => setError(""), 3000);
-              return prev.slice(0, maxSelections);
-            }
-            return prev;
-          });
+          if (!isConfirmed) {
+            setTimeout(() => {
+
+              setIsDragging(false);
+            }, 50);
+
+
+            const maxSelections = numberValue * 10;
+            setSelected(prev => {
+              if (prev.length > maxSelections) {
+                setError(`Maximum ${maxSelections} selections allowed`);
+                setTimeout(() => setError(""), 3000);
+                return prev.slice(0, maxSelections);
+              }
+              return prev;
+            });
+          }
         }}
       />
 
@@ -180,11 +188,21 @@ const GridBoxes = () => {
          transition={{ duration: 0.4,ease: 'easeOut' }}
             whileHover={{scale:1.02}}
    whileTap={{scale:.97}}
-         onClick={() => setSelected([])}
+         onClick={() => {
+           if (isConfirmed) {
+             setIsConfirmed(false);
+           } else {
+             setIsConfirmed(true);
+           }
+         }}
          disabled={error}
-    className=" bottom-4 rounded-xl hover:bg-blue-600  w-60 mt-3 text-white text-center font-semibold bg-blue-400">
-      
-          Confirm Select
+    className={`bottom-4 rounded-xl w-60 mt-3 text-white text-center font-semibold ${
+      isConfirmed
+        ? 'bg-green-600 hover:bg-green-700'
+        : 'bg-blue-400 hover:bg-blue-600'
+    }`}>
+
+          {isConfirmed ? 'Selection Confirmed' : 'Confirm Select'}
         
       </motion.button>
 
@@ -194,7 +212,10 @@ const GridBoxes = () => {
          transition={{ duration: 0.4,ease: 'easeOut' }}
             whileHover={{scale:1.02}}
    whileTap={{scale:.97}}
-          onClick={() => setSelected([])}
+          onClick={() => {
+            setSelected([]);
+            setIsConfirmed(false);
+          }}
           className=" bottom-4 rounded-xl hover:bg-red-600  w-60 mt-3 text-white text-center font-semibold bg-red-400">
           Clear All ({selected.length})
         </motion.button>
