@@ -163,17 +163,41 @@ const GridBoxes = () => {
         }}
       />
 
-      <div className="fixed top-4 right-4 z-10">
-        <button
+      <div className="flex justify-center gap-10">
+   
+      
+
+
+        <motion.button
+            initial={{ opacity: 0, x: -50}}   
+    animate={{ opacity: 1, x: 0 }}    
+         transition={{ duration: 0.4,ease: 'easeOut' }}
+            whileHover={{scale:1.02}}
+   whileTap={{scale:.97}}
+         onClick={() => setSelected([])}
+         disabled={error}
+    className=" bottom-4 rounded-xl hover:bg-blue-600  w-60 mt-3 text-white text-center font-semibold bg-blue-400">
+      
+          Confirm Select
+        
+      </motion.button>
+
+           <motion.button
+                    initial={{ opacity: 0, x: -50}}   
+    animate={{ opacity: 1, x: 0 }}    
+         transition={{ duration: 0.4,ease: 'easeOut' }}
+            whileHover={{scale:1.02}}
+   whileTap={{scale:.97}}
           onClick={() => setSelected([])}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg font-semibold"
-        >
+          className=" bottom-4 rounded-xl hover:bg-red-600  w-60 mt-3 text-white text-center font-semibold bg-red-400">
           Clear All ({selected.length})
-        </button>
-      </div>
+        </motion.button>
+
+        </div>
+
 
       {error && (
-         <div className="fixed bottom-10 left-0 right-0 text-center">
+         <div className="fixed top-10 left-0 right-0 text-center">
 
 
           <motion.div
@@ -185,7 +209,13 @@ const GridBoxes = () => {
           >
             {error}
           </motion.div>
+
+
+
         </div>
+        
+
+        
       )}
     </div>
   );
