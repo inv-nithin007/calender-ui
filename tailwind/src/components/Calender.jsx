@@ -53,7 +53,10 @@ const GridBoxes = () => {
   
       <div className="flex">
         <div className="min-w-10 "></div>
-        <div 
+        <motion.div 
+         initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9 }}
           className="grid gap-2 flex-1"
           style={{
             gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`
@@ -70,13 +73,16 @@ const GridBoxes = () => {
               </div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
 
      
       <div className="flex  gap-2  flex-1 ">
         
-        <div
+        <motion.div
+         initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9 }}
           className="grid "
         >
           {Array.from({ length: 30 }, (_, i) => {
@@ -95,10 +101,14 @@ const GridBoxes = () => {
             }
             return <div key={i} />;
           })}
-        </div>
+        </motion.div>
 
         
-        <div
+        <motion.div
+           initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9 }}
+        
           className="grid gap-1 flex-1 "
           style={{
            
@@ -149,7 +159,7 @@ const GridBoxes = () => {
             />
           );
         })}
-        </div>
+        </motion.div>
       </div>
       
       <Selecto
@@ -157,7 +167,7 @@ const GridBoxes = () => {
         selectByClick={false}
         selectFromInside={true}
 
-        preventDragFromInside={false}
+        
         hitRate={5}
         onDragStart={() => {
           if (!isConfirmed) {

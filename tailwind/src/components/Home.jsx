@@ -103,7 +103,11 @@ export default function Home() {
           transition={{ duration: 0.6 }}
         />
 
-        <div className="flex space-x-4 mt-5">
+        <motion.div
+           initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+        className="flex space-x-4 mt-5">
           <motion.button
             type="button"
             onClick={handleLogout}
@@ -122,7 +126,7 @@ export default function Home() {
           >
             Calculate
           </motion.button>
-        </div>
+        </motion.div>
 
         {error && (
           <motion.p

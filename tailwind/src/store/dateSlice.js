@@ -19,11 +19,7 @@ export const dateSlice = createSlice({
     setNumberValue: (state, action) => {
       state.numberValue = action.payload
     },
-    clearDates: (state) => {
-      state.fromDate = ''
-      state.toDate = ''
-      state.numberValue = 0
-    },
+   
   },
 })
 

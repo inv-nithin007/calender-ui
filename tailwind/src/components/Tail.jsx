@@ -1,7 +1,6 @@
 import './Tail.css'  
 import { useState } from 'react';
 import { motion } from "framer-motion";
-import { useForm } from 'react-hook-form';
 
 
 import { useNavigate } from 'react-router-dom';
