@@ -23,13 +23,8 @@ const GridBoxes = () => {
       day: 'numeric'
     }).replace(' ', '-');
   });
-<<<<<<< Updated upstream
-  
-  const boxes = Array.from({ length: 30*diff }, (_, i) => ({
-=======
 
   const boxes = Array.from({ length: 30 * diff }, (_, i) => ({
->>>>>>> Stashed changes
     id: i + 1,
   }));
 
@@ -52,18 +47,6 @@ const GridBoxes = () => {
     return `${dateStr} ${timeStart}-${timeEnd}`;
   };
 
-<<<<<<< Updated upstream
-  return (
-    <div className="h-screen w-screen p-2 flex flex-col gap-2 overflow-auto">
-      
-  
-      <div className="flex">
-        <div className="min-w-10 "></div>
-        <motion.div 
-         initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9 }}
-=======
   const isAfterFiveThirty = (cellId) => {
     const timeIndex = Math.floor((cellId - 1) / diff);
     const startHour = 8 + Math.floor(timeIndex / 2);
@@ -80,7 +63,6 @@ const GridBoxes = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9 }}
->>>>>>> Stashed changes
           className="grid gap-2 flex-1"
           style={{
             gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`
@@ -96,16 +78,6 @@ const GridBoxes = () => {
         </motion.div>
       </div>
 
-<<<<<<< Updated upstream
-     
-      <div className="flex  gap-2  flex-1 ">
-        
-        <motion.div
-         initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9 }}
-          className="grid "
-=======
       <div className="flex gap-2 flex-1">
 
         <motion.div
@@ -113,7 +85,6 @@ const GridBoxes = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           className="grid"
->>>>>>> Stashed changes
         >
           {Array.from({ length: 30 }, (_, i) => {
             if (i % 2 === 0) {
@@ -133,28 +104,14 @@ const GridBoxes = () => {
           })}
         </motion.div>
 
-<<<<<<< Updated upstream
-        
-        <motion.div
-           initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9 }}
-        
-          className="grid gap-1 flex-1 "
-=======
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9 }}
           className="grid gap-1 flex-1"
->>>>>>> Stashed changes
           style={{
             gridTemplateColumns: `repeat(${diff}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(30, minmax(0, 1fr))`,
-<<<<<<< Updated upstream
-            maxHeight: '100%'
-=======
->>>>>>> Stashed changes
           }}
         >
           {boxes.map((box) => {
@@ -166,7 +123,7 @@ const GridBoxes = () => {
                 data-id={box.id}
                 className={`selectable h-8 border-r-3 border-gray-300 grid-box rounded-lg border-2 p-1
                 ${isConfirmed ? "cursor-not-allowed" : "cursor-pointer"}
-                ${isSelected ? "bg-blue-500 border-blue-400" : disabled ? "bg-gray-200 border-gray-300" : "bg-white border-gray-300 hover:bg-blue-200"}
+                ${isSelected ? "bg-blue-500 border-blue-500" : disabled ? "bg-gray-200 border-gray-300" : "bg-white border-gray-300 hover:bg-blue-200"}
                 `}
                 onClick={() => {
                   if (!isDragging && !isConfirmed) {
@@ -192,26 +149,10 @@ const GridBoxes = () => {
                         : [...prev, box.id];
                     });
                   }
-<<<<<<< Updated upstream
-                  
-                  setSelected((prev) => {
-                    const newSelection = prev.includes(box.id)
-                      ? prev.filter((id) => id !== box.id)
-                      : [...prev, box.id];
-                  
-                    return newSelection;
-                  });
-                } 
-              }}
-            />
-          );
-        })}
-=======
                 }}
               />
             );
           })}
->>>>>>> Stashed changes
         </motion.div>
       </div>
 
@@ -219,11 +160,6 @@ const GridBoxes = () => {
         selectableTargets={[".selectable"]}
         selectByClick={false}
         selectFromInside={true}
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         hitRate={5}
         onDragStart={() => {
           if (!isConfirmed) {
@@ -294,7 +230,6 @@ const GridBoxes = () => {
         </motion.button>
       </div>
 
-
       {error && (
         <div className="fixed top-10 left-0 right-0 text-center">
           <motion.div
@@ -321,24 +256,7 @@ const GridBoxes = () => {
           </div>
         </div>
       )}
-       <div>
-                {selected.length > 0 && (
-        <div className="mt-2 p-4 bg-gray-100 rounded-lg max-h-40 overflow-y-auto">
-          <h3 className="font-semibold mb-2">Selected Time Slots:</h3>
-          <div className="flex flex-wrap gap-2">
-            {selected.map(cellId => (
-              <div key={cellId} className="bg-gray-500 text-white px-3 py-1 rounded-xl shadow-xl text-sm">
-                {getTimeSlot(cellId)}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-        </div>
     </div>
-
-       
-
   );
 };
 
